@@ -5,6 +5,7 @@ import com.jpmchase.salesprocessor.domain.Message;
 import com.jpmchase.salesprocessor.domain.Sale;
 import com.jpmchase.salesprocessor.input.MessageReader;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,38 @@ public class DefaultMessageProcessor implements MessageProcessor {
                     reportCounter = 0;
                 }
 
+                switch (msg.getMsgType()) {
+                    case "type1":
+                        if(salesRegistry.containsKey(msg.getProductType())){
+                            Sale sale = salesRegistry.get(msg.getProductType());
+                            BigDecimal newValue = sale.getValue().add(msg.getSaleValue());
+                            sale.setValue(newValue);
+                            sale.setSalesCounter(sale.getSalesCounter()+1);
+                            salesRegistry.put(msg.getProductType(),sale);
+                        } else {
+                            Sale sale = new Sale(msg.getProductType(),msg.getSaleValue(),1);
+                            salesRegistry.put(msg.getProductType(),sale);
+                        }
+                        break;
+                    case "type2":
+                        String singularProductType="";
 
+                        if(msg.getProductType().charAt(msg.getProductType().length()-1)=='s')
+                            singularProductType = msg.getProductType().substring(0, msg.getProductType().length()-1);
+
+                        if(salesRegistry.containsKey(msg.getProductType())){
+                            Sale sale = salesRegistry.get(singularProductType);
+                            BigDecimal newValue = sale.getValue().add(msg.getSaleValue());
+                            sale.setValue(newValue);
+                            sale.setSalesCounter(sale.getSalesCounter()+msg.getOccurrence().orElse(1));
+                            salesRegistry.put(msg.getProductType(),sale);
+                        } else {
+                            Sale sale = new Sale(msg.getProductType(),msg.getSaleValue().multiply(new BigDecimal(msg.getOccurrence().orElse(1))),msg.getOccurrence().orElse(1));
+                            salesRegistry.put(msg.getProductType(),sale);
+                        }
+                        break;
+
+                }
 
 
 
