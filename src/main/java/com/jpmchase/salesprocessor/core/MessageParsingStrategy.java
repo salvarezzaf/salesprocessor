@@ -1,9 +1,11 @@
 package com.jpmchase.salesprocessor.core;
 
+import com.jpmchase.salesprocessor.domain.Message;
+
 import java.util.List;
 
-public interface MessageParsingStrategy<M> {
+public interface MessageParsingStrategy {
 
-  List<M> parse();
+  List<Message> parse(List<String> notifications);
 
 }

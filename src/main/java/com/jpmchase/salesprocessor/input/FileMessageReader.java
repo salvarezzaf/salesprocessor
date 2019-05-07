@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FileMessageReader implements MessageReader<String> {
+public class FileMessageReader implements MessageReader {
 
     private String inputFilename;
     private List<String> saleNofitications;

@@ -2,8 +2,8 @@ package com.jpmchase.salesprocessor.input;
 
 import java.util.List;
 
-public interface MessageReader<T> {
+public interface MessageReader {
 
-    List<T> read();
+    List<String> read();
 
 }
